@@ -41,6 +41,7 @@ import os
 import email
 import csv
 import pandas as pd
+from datetime import datetime
 
 P_MSG_PATH = "./Messages/" #specify the path to your Winlink Messages Folder Typically "C:\RMS Express\NOCALL\Messages" where NOCALL = your callsign (trailing backslash required)
 P_DATA_PATH = "./Data/" #specify the path to your Winlink Messages Folder Typically "C:\RMS Express\NOCALL\Data" where NOCALL = your callsign (trailing backslash required)
@@ -60,7 +61,7 @@ with open(P_DATA_PATH + F_REGISTRY_FILE ,'r') as f_src, open(P_DATA_PATH + F_REG
         # (2) Need to convert Start of Heading (SOH) to Tab (\t)
         f_wrk_item = f_wrk_item.replace('\x01', '\t')
         f_wrk.write(f_wrk_item)
-# (3) Get RMS Express message-id's for the specified folder e.g. InBox
+# (3) Use pandas to get RMS Express message-id's for the specified folder e.g. InBox and update workfile
 df = pd.read_table(P_DATA_PATH + F_REGISTRY_WORK_FILE, sep='\t')
 df = df.query('i == "' + RMS_FOLDER + '"')
 df['a'].to_csv(P_DATA_PATH + F_REGISTRY_WORK_FILE, sep='\t', index_label=None, header=False, index=False)
@@ -79,8 +80,9 @@ with open(F_OUTPUT_FILE_PATH, 'w', newline='') as f_out:
         else:
             f_msg_body = f_msg_mime.get_payload()
         # (5) Write summary to CSV e.g. output.csv
-        f_out_item = f_msg_mime.get('Date'), f_msg_mime.get('From'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('X-Source'), f_msg_mime.get('X-Location'), f_msg_body
+        f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('From'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('X-Source'), f_msg_mime.get('X-Location'), f_msg_body
         f_out_file.writerow(f_out_item)
-        # (6) print to terminal in cas you like seeing stuff!
+        # (6) print to terminal in case you like seeing stuff!
         #print(f_out_item)
 os.remove(P_DATA_PATH + F_REGISTRY_WORK_FILE)
+print("Complete!")
