@@ -40,7 +40,6 @@
 import os
 import email
 import csv
-from pickle import TRUE
 import pandas as pd
 import argparse
 from datetime import datetime
