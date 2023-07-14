@@ -1,7 +1,7 @@
 #/bin/python
 #
 # Name: rmsmsg2csv.py
-# Version: 20230710
+# Version: 20230713
 #
 # Description: Simple utility to parse RMS Messages and output to CSV
 #
