@@ -12,16 +12,17 @@ Author: Randall Tarantino (rtaranti AT gmail DOT com) is a HAM Radio enthusiast
 
 GUI this is all command line
 
-# Installation
+# Installation on Windows 10
 
 Install has been tested on Windows 10 and Linux Mint 21 +
 
 ## Python 3
 
+Manually install Python 3 from Microsoft Store
+ or
 ```
-Microsoft Store install python 3
+C:\winget install python3
 ```
-
 ## Pandas
 
 ```
