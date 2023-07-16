@@ -14,7 +14,13 @@ GUI this is all command line
 
 # Installation on Windows 10
 
-Install has been tested on Windows 10 and Linux Mint 21 +
+WARNING!! Use at your own risk; it works fine for me!
+
+rmsmsg2csv.py has been tested on:
+- Windows 10
+- Linux Mint 21.1 running RMS Express via CodeWeavers CrossOver 22.1.1
+
+Note: Ideally this utility is OS independent and should execute in any environement that supports Python3 with Pandas.
 
 ## Install Python 3
 
@@ -27,11 +33,11 @@ Manually install Python 3 from Microsoft Store
 ## Install Pandas
 
 ```
-pip install pandas
+C:\pip install pandas
 ```
 or
 ```
-C:\pip install pandas
+pip install pandas
 ```
 
 ## Installation Instructions:
@@ -40,13 +46,12 @@ C:\pip install pandas
 
 # Usage
 
-WARNING!! Use at your own risk; it works fine for me!
-```
-python ./rmsmsg2csv.py
-```
-or
 ```
 "C:\RMS Express\NOCALL\python rmsmsg2csv.py"
+```
+or 
+```
+python ./rmsmsg2csv.py
 ```
 
 # License
