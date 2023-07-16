@@ -16,14 +16,15 @@ GUI this is all command line
 
 Install has been tested on Windows 10 and Linux Mint 21 +
 
-## Python 3
+## Install Python 3
 
-Manually install Python 3 from Microsoft Store
- or
 ```
 C:\winget install python3
 ```
-## Pandas
+or
+Manually install Python 3 from Microsoft Store
+
+## Install Pandas
 
 ```
 pip install pandas
