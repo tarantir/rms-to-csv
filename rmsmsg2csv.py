@@ -78,7 +78,7 @@ def main():
     with open(F_OUTPUT_FILE_PATH, "w", newline="", encoding="utf-8") as f_out:
         file_counter = 0
         f_out_file = csv.writer(f_out)
-        f_out_header = 'rms-date', 'rms-from', 'rms-subject', 'rms-to', 'rms-message-id', 'rms-source', 'rms-sender-location', 'rms-message-body'
+        f_out_header = 'rms-date', 'rms-source', 'rms-subject', 'rms-to', 'rms-message-id', 'rms-from', 'rms-sender-location', 'rms-message-body'
         f_out_file.writerow(f_out_header)
         # (4) Parse message files for the selected message-id's only
         with open(P_DATA_PATH + F_REGISTRY_WORK_FILE, "r", encoding="utf-8") as f_wrk:
@@ -93,7 +93,7 @@ def main():
                 else:
                     f_msg_body = f_msg_mime.get_payload()
                 # (5) Write summary to CSV e.g. output.csv
-                f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('From'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('X-Source'), f_msg_mime.get('X-Location'), f_msg_body
+                f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('From'), f_msg_mime.get('X-Location'), f_msg_body
                 f_out_file.writerow(f_out_item)
                 file_counter = file_counter + 1
     os.remove(P_DATA_PATH + F_REGISTRY_WORK_FILE)
