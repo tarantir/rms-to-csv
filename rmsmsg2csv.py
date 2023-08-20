@@ -56,10 +56,12 @@ parser = argparse.ArgumentParser(description="RMS Message to CSV Utility",
 parser.add_argument("rms_folder_name",
                     help="Specify RMS Folder e.g. InBox or \"Sent Items\" (if spaces use quotes)")
 parser.add_argument("csv_filename", help="Specify CSV Output File e.g. ARES.csv")
+parser.add_argument('--detail' help="Output detailed mime output")
 args = parser.parse_args()
 
 RMS_FOLDER = args.rms_folder_name
 F_OUTPUT_FILE_PATH = args.csv_filename
+F_OUTPUT_DETAIL = args.detail
 
 def main():
     #Parse Registry.txt to find message ID's in Inbox
@@ -78,7 +80,10 @@ def main():
     with open(F_OUTPUT_FILE_PATH, "w", newline="", encoding="utf-8") as f_out:
         file_counter = 0
         f_out_file = csv.writer(f_out)
-        f_out_header = 'rms-date', 'rms-source', 'rms-subject', 'rms-to', 'rms-message-id', 'rms-from', 'rms-sender-location', 'rms-message-body'
+        if F_OUTPUT_DETAIL:
+            f_out_header = 'rms-date', 'rms-source', 'rms-subject', 'rms-to', 'rms-message-id', 'rms-from', 'rms-sender-location', 'rms-message-body'
+        else:
+            f_out_header = 'rms-date', 'rms-source', 'rms-subject'
         f_out_file.writerow(f_out_header)
         # (4) Parse message files for the selected message-id's only
         with open(P_DATA_PATH + F_REGISTRY_WORK_FILE, "r", encoding="utf-8") as f_wrk:
@@ -93,7 +98,10 @@ def main():
                 else:
                     f_msg_body = f_msg_mime.get_payload()
                 # (5) Write summary to CSV e.g. output.csv
-                f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('From'), f_msg_mime.get('X-Location'), f_msg_body
+                if F_OUTPUT_DETAIL:
+                    f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('From'), f_msg_mime.get('X-Location'), f_msg_body
+                else:
+                    f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject')
                 f_out_file.writerow(f_out_item)
                 file_counter = file_counter + 1
     os.remove(P_DATA_PATH + F_REGISTRY_WORK_FILE)
