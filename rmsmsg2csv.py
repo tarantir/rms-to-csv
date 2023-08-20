@@ -56,7 +56,7 @@ parser = argparse.ArgumentParser(description="RMS Message to CSV Utility",
 parser.add_argument("rms_folder_name",
                     help="Specify RMS Folder e.g. InBox or \"Sent Items\" (if spaces use quotes)")
 parser.add_argument("csv_filename", help="Specify CSV Output File e.g. ARES.csv")
-parser.add_argument('-d', action='store', dest='detailed_output', help="Output detailed mime output")
+parser.add_argument('-d', action='store_true', default=True, dest='detailed_output', help="Output detailed mime output")
 args = parser.parse_args()
 
 RMS_FOLDER = args.rms_folder_name
