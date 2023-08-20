@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 RMS_FOLDER = args.rms_folder_name
 F_OUTPUT_FILE_PATH = args.csv_filename
-F_OUTPUT_DETAIL = args.detail
+F_OUTPUT_DETAIL = args.detailed_output
 
 def main():
     #Parse Registry.txt to find message ID's in Inbox
