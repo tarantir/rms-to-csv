@@ -49,7 +49,7 @@ P_DATA_PATH = "./Data/" #specify the path to your Winlink Messages Folder Typica
 
 # change below this line at your own risk
 F_REGISTRY_FILE = "Registry.txt"
-F_REGISTRY_WORK_FILE = "Registry.wrk"
+F_REGISTRY_TSV_WRK_FILE = "Registry.wrk"
 
 parser = argparse.ArgumentParser(description="RMS Message to CSV Utility",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -64,9 +64,12 @@ F_OUTPUT_FILE_PATH = args.csv_filename
 F_OUTPUT_DETAIL = args.detailed_output
 
 def main():
+    rms_to_csv()
+
+def rms_to_csv():
     #Parse Registry.txt to find message ID's in Inbox
     # (1) Copy Registry.txt to Registry.wrk as tab (\t) delimited text
-    with open(P_DATA_PATH + F_REGISTRY_FILE, "r", encoding="utf-8") as f_src, open(P_DATA_PATH + F_REGISTRY_WORK_FILE,"w", encoding="utf-8") as f_wrk:
+    with open(P_DATA_PATH + F_REGISTRY_FILE, "r", encoding="utf-8") as f_src, open(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE,"w", encoding="utf-8") as f_wrk:
         f_wrk_header = 'a\tb\tc\td\te\tf\tg\th\ti\tj\tk\tl\tm\tn\to\tp\tq\tr\ts\tt\tu\tv\n'
         f_wrk.write(f_wrk_header)
         for f_wrk_item in f_src:
@@ -74,9 +77,9 @@ def main():
             f_wrk_item = f_wrk_item.replace('\x01', '\t')
             f_wrk.write(f_wrk_item)
     # (3) Use pandas to get RMS Express message-id's for the specified folder e.g. InBox and update workfile
-    d_frame = pd.read_table(P_DATA_PATH + F_REGISTRY_WORK_FILE, sep='\t')
+    d_frame = pd.read_table(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE, sep='\t')
     d_frame = d_frame.query('i == "' + RMS_FOLDER + '"')
-    d_frame['a'].to_csv(P_DATA_PATH + F_REGISTRY_WORK_FILE, sep='\t', index_label=None, header=False, index=False)
+    d_frame['a'].to_csv(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE, sep='\t', index_label=None, header=False, index=False)
     with open(F_OUTPUT_FILE_PATH, "w", newline="", encoding="utf-8") as f_out:
         file_counter = 0
         f_out_file = csv.writer(f_out)
@@ -86,7 +89,7 @@ def main():
             f_out_header = 'rms-date', 'rms-source', 'rms-subject'
         f_out_file.writerow(f_out_header)
         # (4) Parse message files for the selected message-id's only
-        with open(P_DATA_PATH + F_REGISTRY_WORK_FILE, "r", encoding="utf-8") as f_wrk:
+        with open(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE, "r", encoding="utf-8") as f_wrk:
             f_msg_files = f_wrk.read().splitlines() #remove EOL
         for f_msg_file in f_msg_files:
             is_file = os.path.isfile(P_MSG_PATH + f_msg_file + ".mime")
@@ -104,7 +107,7 @@ def main():
                     f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject')
                 f_out_file.writerow(f_out_item)
                 file_counter = file_counter + 1
-    os.remove(P_DATA_PATH + F_REGISTRY_WORK_FILE)
+    os.remove(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE)
     print(file_counter, "Messages Processed!")
 
 if __name__ == "__main__":
