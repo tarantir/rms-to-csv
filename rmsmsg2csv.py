@@ -51,7 +51,7 @@ P_DATA_PATH = "./Data/" #specify the path to your Winlink Messages Folder Typica
 F_REGISTRY_FILE = "Registry.txt"
 F_REGISTRY_TSV_WRK_FILE = "Registry.wrk"
 
-parser = argparse.ArgumentParser(description="RMS Message to CSV Utility",
+parser = argparse.ArgumentParseF_OUTPUT_FILE_PATHr(description="RMS Message to CSV Utility",
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("rms_folder_name",
                     help="Specify RMS Folder e.g. InBox or \"Sent Items\" (if spaces use quotes)")
@@ -84,9 +84,18 @@ def rms_to_csv():
         file_counter = 0
         f_out_file = csv.writer(f_out)
         if F_OUTPUT_DETAIL:
-            f_out_header = 'rms-date', 'rms-source', 'rms-subject', 'rms-to', 'rms-message-id', 'rms-from', 'rms-sender-location', 'rms-message-body'
+            f_out_header = ('rms-date',
+                            'rms-source',
+                            'rms-subject',
+                            'rms-to',
+                            'rms-message-id',
+                            'rms-from',
+                            'rms-sender-location',
+                            'rms-message-body')
         else:
-            f_out_header = 'rms-date', 'rms-source', 'rms-subject'
+            f_out_header = ('rms-date',
+                            'rms-source',
+                            'rms-subject')
         f_out_file.writerow(f_out_header)
         # (4) Parse message files for the selected message-id's only
         with open(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE, "r", encoding="utf-8") as f_wrk:
@@ -102,9 +111,18 @@ def rms_to_csv():
                     f_msg_body = f_msg_mime.get_payload()
                 # (5) Write summary to CSV e.g. output.csv
                 if F_OUTPUT_DETAIL:
-                    f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject'), f_msg_mime.get('To'), f_msg_mime.get('Message-ID'), f_msg_mime.get('From'), f_msg_mime.get('X-Location'), f_msg_body
+                    f_out_item = (datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'),
+                                                    f_msg_mime.get('X-Source'),
+                                                    f_msg_mime.get('Subject'),
+                                                    f_msg_mime.get('To'),
+                                                    f_msg_mime.get('Message-ID'),
+                                                    f_msg_mime.get('From'),
+                                                    f_msg_mime.get('X-Location'),
+                                                    f_msg_body)
                 else:
-                    f_out_item = datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'), f_msg_mime.get('X-Source'), f_msg_mime.get('Subject')
+                    f_out_item = (datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'),
+                                                    f_msg_mime.get('X-Source'),
+                                                    f_msg_mime.get('Subject'))
                 f_out_file.writerow(f_out_item)
                 file_counter = file_counter + 1
     os.remove(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE)
