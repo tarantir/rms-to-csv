@@ -1,7 +1,7 @@
 #/bin/python
 #
 # Name: rmsmsg2csv.py
-# Version: 20230713
+# Version: 20231107
 #
 # Description: Simple utility to parse RMS Messages and output to CSV
 #
@@ -51,10 +51,8 @@ P_DATA_PATH = "./Data/" #specify the path to your Winlink Messages Folder Typica
 F_REGISTRY_FILE = "Registry.txt"
 F_REGISTRY_TSV_WRK_FILE = "Registry.wrk"
 
-parser = argparse.ArgumentParseF_OUTPUT_FILE_PATHr(description="RMS Message to CSV Utility",
-                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("rms_folder_name",
-                    help="Specify RMS Folder e.g. InBox or \"Sent Items\" (if spaces use quotes)")
+parser = argparse.ArgumentParser(description="RMS Message to CSV Utility", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("rms_folder_name", help="Specify RMS Folder e.g. InBox or \"Sent Items\" (if spaces use quotes)")
 parser.add_argument("csv_filename", help="Specify CSV Output File e.g. ARES.csv")
 parser.add_argument('-d', action='store', dest='detailed_output', help="Output detailed mime output")
 args = parser.parse_args()
