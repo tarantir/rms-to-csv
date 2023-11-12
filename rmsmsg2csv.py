@@ -65,6 +65,7 @@ def main():
     rms_to_csv()
 
 def rms_to_csv():
+    """Retrieve message details and write to CSV"""
     #Parse Registry.txt to find message ID's in Inbox
     # (1) Copy Registry.txt to Registry.wrk as tab (\t) delimited text
     with open(P_DATA_PATH + F_REGISTRY_FILE, "r", encoding="utf-8") as f_src, open(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE,"w", encoding="utf-8") as f_wrk:
