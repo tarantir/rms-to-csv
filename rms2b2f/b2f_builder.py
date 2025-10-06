@@ -34,8 +34,10 @@ def build_address_header(meta: Dict, mbo: str = "") -> bytes:
     if mbo:
         out += _line(f"Mbo: {mbo}")
 
+    # Body header and required blank line
     body_len = len(body)
     out += _line(f"Body:{body_len}")
+    out += CRLF  # <-- ensure a blank line between header and body
     out += body + CRLF
 
     for att in files:
