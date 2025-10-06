@@ -1,23 +1,25 @@
 
-from typing import List, Dict
+from typing import Dict
 from .helpers import CRLF
+import time, os
 
 def _line(s: str) -> bytes:
     return (s + "\r\n").encode("utf-8")
 
+def _auto_mid() -> str:
+    return f"AUTO-{int(time.time())}-{os.getpid()}"
+
 def build_address_header(meta: Dict, mbo: str = "") -> bytes:
     # Construct the Address Header block for B2 encapsulated messages.
-    if not meta.get("mid"):
-        raise ValueError("Missing Message-ID (Mid)")
-    if meta.get("body_bytes") is None:
-        raise ValueError("Missing body_bytes")
-
-    body = meta["body_bytes"]
+    mid = meta.get("mid") or _auto_mid()
+    body = meta.get("body_bytes", b"")
+    if body is None:
+        body = b""
     files = meta.get("attachments", [])
 
     out = bytearray()
-    out += _line(f"Mid: {meta['mid']}")
-    out += _line(f"Date: {meta['date']}")
+    out += _line(f"Mid: {mid}")
+    out += _line(f"Date: {meta.get('date','')}")
     out += _line("Type: Private")
     out += _line(f"From: {meta.get('from','')}")
 
