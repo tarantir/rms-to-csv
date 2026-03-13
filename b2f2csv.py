@@ -1,4 +1,5 @@
 import os, sys, re, csv
+from email.utils import parsedate_to_datetime
 
 HEADER_STOP_RE = re.compile(rb'(?im)^[ \t]*Body:[ \t]*\d+[ \t]*$', re.M)
 
@@ -51,6 +52,18 @@ def main():
     folder = sys.argv[1]
     out_csv = sys.argv[2]
     rows = scan_folder(folder)
+    from datetime import datetime
+    def sort_key(r):
+        for fmt in ("%Y/%m/%d %H:%M", "%Y-%m-%d %H:%M"):
+            try:
+                return datetime.strptime(r["Date"], fmt)
+            except ValueError:
+                pass
+        try:
+            return parsedate_to_datetime(r["Date"]).replace(tzinfo=None)
+        except Exception:
+            return datetime.min
+    rows.sort(key=sort_key)
     os.makedirs(os.path.dirname(out_csv) or ".", exist_ok=True)
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["Date","Sender","Subject"])
