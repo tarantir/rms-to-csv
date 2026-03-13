@@ -96,6 +96,8 @@ def rms_to_csv():
                             'rms-source',
                             'rms-subject')
         f_out_file.writerow(f_out_header)
+        # Collect all message data
+        messages = []
         # (4) Parse message files for the selected message-id's only
         with open(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE, "r", encoding="utf-8") as f_wrk:
             f_msg_files = f_wrk.read().splitlines() #remove EOL
@@ -108,7 +110,7 @@ def rms_to_csv():
                         f_msg_body = f_msg_payload.get_payload()
                 else:
                     f_msg_body = f_msg_mime.get_payload()
-                # (5) Write summary to CSV e.g. output.csv
+                # (5) Collect message data
                 if F_OUTPUT_DETAIL:
                     f_out_item = (datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'),
                                                     f_msg_mime.get('X-Source'),
@@ -122,8 +124,13 @@ def rms_to_csv():
                     f_out_item = (datetime.strptime(f_msg_mime.get('Date'), '%a, %d %b %Y %H:%M:%S %z'),
                                                     f_msg_mime.get('X-Source'),
                                                     f_msg_mime.get('Subject'))
-                f_out_file.writerow(f_out_item)
+                messages.append(f_out_item)
                 file_counter = file_counter + 1
+        # Sort messages by date (first element in tuple)
+        messages.sort(key=lambda x: x[0])
+        # Write sorted messages to CSV
+        for msg in messages:
+            f_out_file.writerow(msg)
     os.remove(P_DATA_PATH + F_REGISTRY_TSV_WRK_FILE)
     print(file_counter, "Messages Processed!")
 
